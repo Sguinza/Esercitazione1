@@ -71,6 +71,6 @@ public class Docente {
     
         @Override
     public String toString() {
-        return "nome:  " + nome + ", giorno:  " + giorno + ", ora:  " + ora + ", note:  " + note;
+        return  nome + "," + giorno + "," + ora + "," + note + ";";
     }
 }

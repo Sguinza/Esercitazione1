@@ -15,7 +15,7 @@ public class Parser {
         docenti = new ArrayList();
     }
     
-    public List parseDocument(String filename,String giorno)
+    public List parseDocument(String filename,String giorno,int scelta)
             throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory;
         DocumentBuilder builder;
@@ -27,7 +27,7 @@ public class Parser {
         String nome="";
         String note="";
         String ora="";
-        boolean esito;
+        boolean esito1,esito2;
         // creazione dell’albero DOM dal documento XML
         factory = DocumentBuilderFactory.newInstance();
         builder = factory.newDocumentBuilder();
@@ -38,18 +38,24 @@ public class Parser {
             for (int i = 2; i < nodelist.getLength(); i++) {
                 element = (Element) nodelist.item(i);
                 NodeList nd = element.getElementsByTagName("td");
-                esito = false;
+                esito1 = false;
+                esito2 = false;
                 for(int j = 1; j < nd.getLength(); j++){
                     Element el = (Element) nd.item(j);
                     switch(j){
                         case 1:
-                            nome = el.getTextContent();
+                            if(j == 1){
+                                nome = el.getTextContent();
+                                if(giorno.equals(nome) && scelta == 2){
+                                    esito2 = true;
+                                }
+                            }
                             break;
                         case 2:
                             if(j == 2){
                                 giornata = el.getTextContent();
-                                if(giorno.equals(giornata)){
-                                    esito = true;
+                                if(giorno.equals(giornata) && scelta == 1){
+                                    esito1 = true;
                                 }
                             }
                             break;
@@ -64,8 +70,14 @@ public class Parser {
                     }
                 }
                 docente = new Docente(nome, giornata, ora, note);
-                if(esito == true){
-                    docenti.add(docente);
+                if(scelta ==1){
+                    if(esito1==true){
+                        docenti.add(docente);
+                    }
+                }else{
+                    if(esito2==true){
+                        docenti.add(docente);
+                    }
                 }
             }
         }
